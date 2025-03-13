@@ -68,7 +68,7 @@
     </style>
     <style>
     body{
-    background: #222;
+    background: #D1E1F4;
     overflow: hidden;
 }
 i{
@@ -100,5 +100,93 @@ i{
      </div>
 
     <h1>Welcome to hack0x10 . <br> HACKING IS NOT CRIME</h1>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .tip {
+            background: #e3f2fd;
+            padding: 10px;
+            border-left: 5px solid #007bff;
+            margin-bottom: 10px;
+        }
+        .code {
+            background: #222;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bug Bounty Tips & Real-Life RCE Example</h1>
+        
+        <h2>Bug Bounty Tips</h2>
+        <div class="tip">1. Always check for default credentials (admin:admin, root:root, etc.).</div>
+        <div class="tip">2. Look for file upload functionalities and test for unrestricted file execution.</div>
+        <div class="tip">3. Examine how user inputs are handled—focus on command injection, SQLi, and XSS.</div>
+        <div class="tip">4. Check for outdated software versions and publicly known exploits (CVE database).</div>
+        <div class="tip">5. Monitor API responses for sensitive information leakage (e.g., API keys, tokens).</div>
+        
+        <h2>Real-Life RCE Example (OWASP Top 10)</h2>
+        <p><strong>Vulnerability:</strong> Remote Code Execution (RCE) via unsanitized input</p>
+        <p><strong>Target:</strong> A web application that allows users to ping an IP address.</p>
+
+        <h3>Vulnerable Code:</h3>
+        <div class="code">
+            &lt;?php
+            $ip = $_GET['ip'];
+            echo shell_exec("ping -c 4 " . $ip);
+            ?&gt;
+        </div>
+
+        <h3>Exploitation:</h3>
+        <p>Since the input is directly concatenated into a system command, an attacker can inject additional commands.</p>
+        <p><strong>Payload:</strong></p>
+        <div class="code">
+            127.0.0.1; cat /etc/passwd
+        </div>
+        
+        <h3>Impact:</h3>
+        <p>By injecting `; cat /etc/passwd`, an attacker can read system files, execute arbitrary commands, and take control of the server.</p>
+        
+        <h3>Fix:</h3>
+        <p>Use escapeshellarg() to sanitize input:</p>
+        <div class="code">
+            &lt;?php
+            $ip = escapeshellarg($_GET['ip']);
+            echo shell_exec("ping -c 4 " . $ip);
+            ?&gt;
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>RCE is one of the most dangerous vulnerabilities in the OWASP Top 10. Always sanitize user input and avoid direct execution of user-controlled data.</p>
+    </div>
+
 </body>
 </html>
